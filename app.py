@@ -22,6 +22,7 @@ barchart =  px.bar(df2, x = 'year' , y = 'number' , title = 'Year wise count of 
 
 #fig = px.bar(df, x="Fruit", y="Amount", color="City", barmode="group")
 app = dash.Dash(__name__)
+server = app.server
 app.layout = html.Div([
     html.H1("Web Application Dashboard with Dash", style = {'text-align': 'center'}),
 
