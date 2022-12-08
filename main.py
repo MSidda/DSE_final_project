@@ -325,7 +325,7 @@ dcc.Graph(
 ),
 
 dcc.Graph(
-        id='stacked_plot',
+        id='area1_plot',
         figure=area_1  
 ),
 
