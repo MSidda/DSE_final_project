@@ -17,18 +17,18 @@ url = 'https://storage.googleapis.com/fall2022_assignments/Point_in_Time_Estimat
 df = pd.read_csv(url)
 df = shower.clean(df)
 
-print(df.head(4))
 df2 = df[(df['homelessness'] == 'Overall Homeless') & (df['state'] == 'Total')]
 barchart =  px.bar(df2, x = 'year' , y = 'number' , title = 'Year wise count of Overall Homeless people in USA' , color='year')
-#print(df.head(4))
-df2 = df[(df['homelessness'] == 'Overall Homeless') & (df['state'] == 'Total')]
-barchart =  px.bar(df2, x = 'year' , y = 'number' , title = 'Year wise count of Overall Homeless people in USA' , color='year')
+barchart.update_layout({'title_x': 0.5})
+
 df3 = df[(df['state'] != 'Total')]
 df3 = df3.groupby(['state','year'])['number'].sum().reset_index()
 #df4 = df3.groupby('state')['number'].sum().reset_index()
 line_chart_1 = px.line(df3, x = 'year', y = 'number',color='state', title= 'Year on Year Homeless Trend statewise') 
+line_chart_1.update_layout({'title_x': 0.5})
 #text_auto = 'True'
 corr_plot = px.imshow(df.corr(), zmin=-1, zmax=1, color_continuous_scale='rdbu', title='Master Correlation Plot')
+corr_plot.update_layout({'title_x': 0.5})
 df_1 = df[(df['homelessness'] == 'Chronically Homeless Individuals' ) & (df['state'] != 'Total')]
 df_1 = df_1.groupby(['year','state','region'])['number'].sum().reset_index()
 
@@ -44,6 +44,7 @@ pie_1= px.pie(
 	opacity=None,
 	hole=0.8
 ) 
+pie_1.update_layout({'title_x': 0.5})
 
 pie_2= px.pie(
 	data_frame=df_1,
@@ -58,17 +59,23 @@ pie_2= px.pie(
 	opacity=None,
 	hole=0.3
 ) 
+pie_2.update_layout({'title_x': 0.5})
+
 df_2 = df[(df['homelessness'] == 'Chronically Homeless People in Families')|(df['homelessness'] =='Unsheltered Chronically Homeless' )|(df['homelessness'] =='Sheltered Total Chronically Homeless') | (df['homelessness'] == 'Chronically Homeless Individuals') & (df['region'] != 'Total')]
 scat_1 = px.scatter(df_2, x="homelessness", y="number", title="Scatterplot of Chronically homeless population",color="year",
                  size='number' )
+scat_1.update_layout({'title_x': 0.5})
 scat_2 = px.scatter(df, x="year", y="number", title="Scatterplot of homeless population through years",color="homelessness",
                  size='number' )
+scat_2.update_layout({'title_x': 0.5})
 scat_3 = px.scatter(df_1, x="year", y="number", color="region", facet_row=None, facet_col="region", title='Scatterplot of Homeless Population through Years Across Regions')
 
+scat_3.update_layout({'title_x': 0.5})
 overall=df[(df.homelessness=='Sheltered ES Homeless') & ((df.state!='Total') & (df.state != 'CA') & (df.state != 'NY') & (df.state != 'MA') & (df.state != 'PA'))]
 overall=overall.sort_values(by = 'year', ascending = True) 
 choro = px.choropleth(overall, locations='state',
-                    locationmode="USA-states", color='number', animation_frame="year", scope="usa", color_continuous_scale="oranges", title= 'Animated Choropleth Map')
+                    locationmode="USA-states", color='number', animation_frame="year", scope="usa", color_continuous_scale="oranges", title='Homeless count on Region level for all States')
+choro.update_layout({'title_x': 0.5})
 
 ###
 #J#
@@ -104,7 +111,7 @@ imf = px.imshow(
 	}
 )
 
-imf.update_layout(title={'text': 'Sheltered Ratio'})
+imf.update_layout(title={'text': 'Sheltered Ratio', 'x': 0.5})
 imf.update_xaxes(dtick=1)
 imf.update_yaxes(dtick=1)
 ###
@@ -117,7 +124,8 @@ sid_box.update_layout(
     font_color="blue",
     title_font_family="Times New Roman",
     title_font_color="red",
-    legend_title_font_color="green"
+    legend_title_font_color="green",
+	title_x = 0.5
 )
 
 #stacked - bar
@@ -234,6 +242,7 @@ df_3 = df[(df['region'] == 'west')  & ((df['homelessness'] == 'Chronically Homel
 (df['homelessness'] =='Sheltered Total Chronically Homeless') | (df['homelessness'] == 'Chronically Homeless Individuals'))  ]
 df_3 = df_3.groupby(['year','state'])['number'].sum().reset_index()
 line2 = px.line(df_3, x="year", y="number",color='state',title='Chronical Homelessness trend spawning over years in west region of USA')
+line2.update_layout(title_x=0.5)
 df_4 = df[(df['region'] == 'southwest')  & ((df['homelessness'] == 'Chronically Homeless People in Families')|(df['homelessness'] =='Unsheltered Chronically Homeless' ) |
 
           (df['homelessness'] =='Sheltered Total Chronically Homeless') | (df['homelessness'] == 'Chronically Homeless Individuals'))  ]
@@ -246,8 +255,10 @@ title='Chronical Homelessness trend spawning over years in southwest region of U
 area_1.update_layout(title_text='Chronical Homelessness trend spawning over years in southwest region of USA', title_x=0.5, title_font_color="blue",)
 #fig = px.bar(df, x="Fruit", y="Amount", color="City", barmode="group")
 vio=px.violin(df_4, x="state", y="number",title='Statistical attributes of Southwest region states ', color='state')
+vio.update_layout(title_x=0.5)
 df7 = df[df['state']!= 'Total']
 sun = px.sunburst(df7, path=['region', 'state'], values='number', height=600, title='State wise homeless population distribution')
+sun.update_layout(title_x=0.5)
 
 df_2 = df[
 	(
@@ -283,11 +294,12 @@ sun_1 = px.sunburst(
 	branchvalues=None,
 	maxdepth=None
 )
+sun_1.update_layout(title_x=0.5)
 
 app = dash.Dash(__name__)
 server = app.server
 app.layout = html.Div([
-    html.H1("Web Application Dashboard with Dash", style = {'text-align': 'center'}),
+    html.H1("Homelessness in the United States: 2007-2018", style = {'text-align': 'center'}),
 
 
     # dcc.Dropdown(id = "state_ranking",
@@ -376,11 +388,13 @@ app.layout = html.Div([
     Western region has most outliers and has a pattern of increase across years while Midwest is similarly distributed and reducing passing through years.'''),
 	html.Div(style={'height': '100px'}),
 	html.Div(children='''
-	'''),
+	What are the top states with homeless count in each respective region?'''),
 	dcc.Graph(
         id='chorofil',
         figure=choro
     ),
+	html.Div(children='''
+	We observe that the North-East regions has 'NY','MA' , West is being dominated by 'CA', South-East by 'FL','GA' , South-West by 'TX','AZ' and all the top 4 states have almost equal amount of proportions in the midwest'''),
  
 #########
 #begin J#
@@ -441,7 +455,6 @@ app.layout = html.Div([
 		see which ones, if any, have a tighter relationship.'''
 	),
 	html.Br(),
-	html.Br(),
 	html.Div([
 		html.Div(
 			dcc.Dropdown(
@@ -457,9 +470,8 @@ app.layout = html.Div([
 		]
 	),
 	html.Br(),
-	html.Br(),
 	html.Div(
-		''' corr writeup'''
+		'''It appears that the southeast and southwest regions are the regions with the highest interstate sheltering ratio correlations.'''
 	),
 	html.Div(style={'height': '200px'}),
 #######
@@ -535,7 +547,12 @@ app.layout = html.Div([
 	html.Div(children='''
         boxplot
     '''),
-	html.Div(style={'height': '100px'})
+	html.Div(style={'height': '100px'}),
+	html.H2('In Conclusion:'),
+	html.H3('''
+	The homeless population is less related to the year, but more related to the region and state.
+	The distribution of the type and proportion of the homeless population is relatively stable, and no major changes have been seen.
+	There are obvious differences in the characteristics of the homeless population in different regions, with the largest homeless population in the west and the largest homeless population in CA.''')
 ])
 
 #########
@@ -577,6 +594,7 @@ def update_graph(year):
 		xaxis={'categoryorder': 'category ascending'},
 		width=1500,
 		height=500,
+		title_x=0.5,
 		margin={'autoexpand': False, 'r': 250}
 	)
 	return ps_fig
@@ -602,6 +620,7 @@ def update_cor(reg):
 	)
 	corf.update_layout(
 		title={'text': 'Sheltered Ratio Relationships between States'},
+		title_x=0.5,
 		width=900,
 		height=900
 	)
