@@ -28,7 +28,7 @@ df3 = df3.groupby(['state','year'])['number'].sum().reset_index()
 #df4 = df3.groupby('state')['number'].sum().reset_index()
 line_chart_1 = px.line(df3, x = 'year', y = 'number',color='state', title= 'Year on Year Homeless Trend statewise') 
 #text_auto = 'True'
-corr_plot = px.imshow(df.corr(), zmin=-1, zmax=1, color_continuous_scale='rdbu')
+corr_plot = px.imshow(df.corr(), zmin=-1, zmax=1, color_continuous_scale='rdbu', title='Master Correlation Plot')
 df_1 = df[(df['homelessness'] == 'Chronically Homeless Individuals' ) & (df['state'] != 'Total')]
 df_1 = df_1.groupby(['year','state','region'])['number'].sum().reset_index()
 
@@ -63,12 +63,12 @@ scat_1 = px.scatter(df_2, x="homelessness", y="number", title="Scatterplot of Ch
                  size='number' )
 scat_2 = px.scatter(df, x="year", y="number", title="Scatterplot of homeless population through years",color="homelessness",
                  size='number' )
-scat_3 = px.scatter(df_1, x="year", y="number", color="region", facet_row=None, facet_col="region")
+scat_3 = px.scatter(df_1, x="year", y="number", color="region", facet_row=None, facet_col="region", title='Scatterplot of Homeless Population through Years Across Regions')
 
 overall=df[(df.homelessness=='Sheltered ES Homeless') & ((df.state!='Total') & (df.state != 'CA') & (df.state != 'NY') & (df.state != 'MA') & (df.state != 'PA'))]
 overall=overall.sort_values(by = 'year', ascending = True) 
 choro = px.choropleth(overall, locations='state',
-                    locationmode="USA-states", color='number', animation_frame="year", scope="usa", color_continuous_scale="oranges", title= 'Choropleth Map for all the states excluding the top four states (CA,NY,MA,PA)')
+                    locationmode="USA-states", color='number', animation_frame="year", scope="usa", color_continuous_scale="oranges", title= 'Animated Choropleth Map')
 
 ###
 #J#
@@ -104,32 +104,9 @@ imf = px.imshow(
 	}
 )
 
-imf.update_layout(title={'text': 'Sheltered Ratio'}, title_x = 0.5)
+imf.update_layout(title={'text': 'Sheltered Ratio'})
 imf.update_xaxes(dtick=1)
 imf.update_yaxes(dtick=1)
-#imf.update_layout(title_text='Sheltered Ratio', ###title_x=0.5, title_font_color="green",)
-
-# Make corr
-ratio_grp = ratio_df.groupby('state')
-region_order = np.asarray([ratio_grp.get_group(ST).region.iloc[0] for ST in statecodes])
-swapper = np.argsort(region_order)
-newmat = matrix[swapper,:]
-newstt = statecodes[swapper]
-
-corf = px.imshow(
-	np.corrcoef(newmat),
-	x=newstt,
-	y=newstt,
-	range_color=[-1,1],
-	color_continuous_scale=px.colors.diverging.BrBG
-)
-corf.update_layout(
-	title={'text': 'Sheltered Ratio Relationships between States'},
-	width=900,
-	height=900
-)
-corf.update_xaxes(dtick=1)
-corf.update_yaxes(dtick=1)
 ###
 #J#
 ###
@@ -310,7 +287,7 @@ sun_1 = px.sunburst(
 app = dash.Dash(__name__)
 server = app.server
 app.layout = html.Div([
-    html.H1("Dashboard for Homeless people in United States of America (USA)", style = {'text-align': 'center'}),
+    html.H1("Web Application Dashboard with Dash", style = {'text-align': 'center'}),
 
 
     # dcc.Dropdown(id = "state_ranking",
@@ -325,45 +302,82 @@ app.layout = html.Div([
     html.Div(id = 'output_container', children = []),
     html.Br(),
 
+	html.Div(children='''
+    Is the Trend of homeless people increasing or decreasing over the years?'''),
     dcc.Graph(
         id='bar-graph',
         figure=barchart
     ),
-
+	html.Div(children='''
+    We do observe that the overall number of homeless people has been decreasing over the years from the above plot'''),
+	html.Div(style={'height': '100px'}),
+	html.Div(children='''
+	We see that the Overall homeless people have been decreasing over a period. Does it mean all the states had high no. of homeless people and has decreased over a period of time'''),
     dcc.Graph(
         id='pie-graph',
         figure=line_chart_1
     ),
-
+	html.Div(children='''
+    We do observe that the trends of statewise are very fluctuating and the Top 4 states such as 'CA','NY','FL','TX' have a huge number of homeless people compared to the other states
+	'''),
+	html.Div(style={'height': '100px'}),
+	html.Div(children='''
+	What is the effect on homeless population with increasing years'''),
     dcc.Graph(
         id='corr-graph',
         figure=corr_plot
     ),
-
+	html.Div(children='''
+    With increasing year homeless individuals count is slightly decreasing i.e., there is a slight negative correlation between the two variables.'''),
+	html.Div(style={'height': '100px'}),
+	html.Div(children='''
+	What is the ratio of chronically homeless individual’s distribution across regions in USA?'''),
     dcc.Graph(
         id='pie_1',
         figure=pie_1
     ),
-
-        dcc.Graph(
+	html.Div(children='''
+    The western region is dominated by chronically homeless individuals with close to half the chronically homeless individual’s population residing there. Followed not so close by southeastern region while southwestern region being the lowest with midwestern region coming very close.'''),
+	html.Div(style={'height': '100px'}),
+	html.Div(children='''
+	What is the ratio of chronically homeless individual’s distribution across state in USA?'''),
+	dcc.Graph(
         id='pie_2',
         figure=pie_2
     ),
-
+	html.Div(children='''
+    CA from the western region contributes highly to the western region domination of chronically homeless individuals with majority of the overall chronically homeless individual’s population residing in CA. With a far margin of difference with CA, FL, TX, NY and the rest follow while states like SD, ND, GU, MP being very sparsely populated'''),
+	html.Div(style={'height': '100px'}),
+	html.Div(children='''
+	How is chronically homelessness distributed across years?'''),
     dcc.Graph(
         id='scatter_1',
         figure=scat_1
     ),
-
-        dcc.Graph(
+	html.Div(children='''
+     Unsheltered and sheltered chronically homeless people are highest in 2012 and 2011 respectively while chronically homeless individuals and in families are highest in 2007 and 2013 respectively.'''),
+	html.Div(style={'height': '100px'}),
+	html.Div(children='''
+	How is homelessness category distributed across years?'''),
+	dcc.Graph(
         id='scatter_2',
         figure=scat_2
     ), 
-        dcc.Graph(
+	html.Div(children='''
+    Overall homeless by default are highest. The highest are Sheltered homeless and homeless individuals.'''),
+	html.Div(style={'height': '100px'}),
+	html.Div(children='''
+	How is homelessness category distributed across years per region?'''),
+	dcc.Graph(
         id='scatter_3',
         figure=scat_3
     ),
-        dcc.Graph(
+	html.Div(children='''
+    Western region has most outliers and has a pattern of increase across years while Midwest is similarly distributed and reducing passing through years.'''),
+	html.Div(style={'height': '100px'}),
+	html.Div(children='''
+	'''),
+	dcc.Graph(
         id='chorofil',
         figure=choro
     ),
@@ -428,17 +442,24 @@ app.layout = html.Div([
 	),
 	html.Br(),
 	html.Br(),
-	html.Div(
-		dcc.Graph(figure=corf),
-		style={
-			'width': '1000px',
-			'height': '1000px'
-		}
+	html.Div([
+		html.Div(
+			dcc.Dropdown(
+				options=df.region.unique(),
+				value='west',
+				id='reg_dropdown'
+			)
+		),
+		html.Div(
+			dcc.Graph(id='ratio_cor'),
+			style={'width': '1000', 'height': '1000px'}
+		)
+		]
 	),
 	html.Br(),
 	html.Br(),
 	html.Div(
-		''' '''
+		''' corr writeup'''
 	),
 	html.Div(style={'height': '200px'}),
 #######
@@ -448,40 +469,73 @@ app.layout = html.Div([
 	html.Div(children='''
         Dash: Another example Bar chart
     '''),
-        dcc.Graph(
+	html.Div(style={'height': '100px'}),
+	html.Div(children='''
+	What is the statistical distribution of homelessness category across region?'''),
+	dcc.Graph(
         id='box_plot',
         figure=sid_box
     ),
 	html.Div(children='''
-        boxplot
-    '''),
+    All the region distributions are extremely skewed with outliers while Midwest distributed is moderately skewed. '''),
+	html.Div(style={'height': '100px'}),
+	html.Div(children='''
+	Are all the Homeless types equally distributed over the years?'''),
 	dcc.Graph(
 			id='stacked_plot',
 			figure=stacked  
 	),
+	html.Div(children='''
+    We observe from the data that the number of Sheltered Homeless has the highest proportion of homeless people while 'Overall Homeless' and 'Sheltered Homeless' have an almost equal amount of proportion followed by 'Homeless_Individuals'''),
+	html.Div(style={'height': '100px'}),
+	html.Div(children='''
+	What is the chronically homeless trend in western region?'''),
 	dcc.Graph(
 			id='line2_plot',
 			figure=line2  
 	),
-
+	html.Div(children='''
+    All the states in west follow a stable and slight increase except for CA which is varying across years but reaching its peak in 2017. '''),
+	html.Div(style={'height': '100px'}),
+	html.Div(children='''
+	 What is the chronically homeless trend in southwestern region?'''),
 	dcc.Graph(
 			id='area1_plot',
 			figure=area_1  
 	),
+	html.Div(children='''
+     All the states in west follow a similar trend varying across years but reaching its peak in 2011.'''),
+	html.Div(style={'height': '100px'}),
+	html.Div(children='''
+	'''),
 
 	dcc.Graph(
 			id='sun_plot',
 			figure=sun  
 	),
+	html.Div(children='''
+        boxplot
+    '''),
+	html.Div(style={'height': '100px'}),
+	html.Div(children='''
+	 Are Homeless of certain states equally distributed?'''),
 	dcc.Graph(
 			id='vio_plot',
 			figure=vio  
 	),
+	html.Div(children='''
+    We analyze the distribution of homeless according to different states, years, and numbers. First, the range of overall unemployment in different states in the Southwest region is significantly different. Relatively speaking, the change range of the number of unemployed people in OK is the smallest, and the range of the number of unemployed people in TX is the largest.'''),
+	html.Div(style={'height': '100px'}),
+	html.Div(children='''
+	'''),
 	dcc.Graph(
 			id='sun_plot1',
 			figure=sun_1 
 	),
-
+	html.Div(children='''
+        boxplot
+    '''),
+	html.Div(style={'height': '100px'})
 ])
 
 #########
@@ -523,10 +577,39 @@ def update_graph(year):
 		xaxis={'categoryorder': 'category ascending'},
 		width=1500,
 		height=500,
-        title_x= 0.5,
 		margin={'autoexpand': False, 'r': 250}
 	)
 	return ps_fig
+
+@app.callback(
+    Output('ratio_cor', 'figure'),
+    Input('reg_dropdown', 'value'))
+def update_cor(reg):
+	ratio_grp = ratio_df.groupby('state')
+	region_order = np.asarray([ratio_grp.get_group(ST).region.iloc[0] for ST in statecodes])
+	reg_mat = matrix[region_order == reg,:]
+	reg_stt = statecodes[region_order == reg]
+	#swapper = np.argsort(region_order)
+	#newmat = matrix[swapper,:]
+	#newstt = statecodes[swapper]
+
+	corf = px.imshow(
+		np.corrcoef(reg_mat),
+		x=reg_stt,
+		y=reg_stt,
+		range_color=[-1,1],
+		color_continuous_scale=px.colors.diverging.BrBG
+	)
+	corf.update_layout(
+		title={'text': 'Sheltered Ratio Relationships between States'},
+		width=900,
+		height=900
+	)
+
+	corf.update_xaxes(dtick=1)
+	corf.update_yaxes(dtick=1)
+	return corf
+		
 #######
 #end J#
 #######
