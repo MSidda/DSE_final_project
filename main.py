@@ -37,6 +37,7 @@ area_1 = vis.area1(df)
 vio = vis.vio_plot(df)
 sun = vis.sun_plot(df)
 sun_1 = vis.sun_plot_1(df)
+mj_box = vis.mjbox(df)
 
 app = dash.Dash(__name__)
 server = app.server
@@ -83,6 +84,15 @@ app.layout = html.Div([
     ),
 	html.Div(children='''
     With increasing year homeless individuals count is slightly decreasing i.e., there is a slight negative correlation between the two variables.'''),
+	html.Div(style={'height': '100px'}),
+	html.Div('''
+	Is the distribution symmetric?'''),
+	dcc.Graph(
+		id='mbox_1',
+		figure=mj_box
+	),
+	html.Div('''
+	All the states follow asymmetric distribution with outliers affecting the data'''),
 	html.Div(style={'height': '100px'}),
 	html.Div(children='''
 	What is the ratio of chronically homeless individual’s distribution across regions in USA?'''),

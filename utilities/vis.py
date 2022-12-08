@@ -329,3 +329,8 @@ def sun_plot_1(df):
 	)
 	sun_1.update_layout(title_x=0.5)
 	return sun_1
+
+def mjbox(df):
+	df_m1 = df[(df['homelessness'] == 'Overall Homeless' ) & (df['region'] == 'west')]
+	bx1=px.box(df_m1,x='year',y='number',color='year',title='Descriptive Statistics of Overall Homeless in West')
+	return bx1
