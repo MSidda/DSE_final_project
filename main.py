@@ -476,11 +476,6 @@ app.layout = html.Div([
 	html.Div(style={'height': '200px'}),
 #######
 #end J#
-#######
-
-	html.Div(children='''
-        Dash: Another example Bar chart
-    '''),
 	html.Div(style={'height': '100px'}),
 	html.Div(children='''
 	What is the statistical distribution of homelessness category across region?'''),
