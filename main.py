@@ -536,9 +536,6 @@ app.layout = html.Div([
 			id='sun_plot1',
 			figure=sun_1 
 	),
-	html.Div(children='''
-        boxplot
-    '''),
 	html.Div(style={'height': '100px'}),
 	html.H2('In Conclusion:'),
 	html.H3('''
