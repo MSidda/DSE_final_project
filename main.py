@@ -68,7 +68,7 @@ scat_3 = px.scatter(df_1, x="year", y="number", color="region", facet_row=None, 
 overall=df[(df.homelessness=='Sheltered ES Homeless') & ((df.state!='Total') & (df.state != 'CA') & (df.state != 'NY') & (df.state != 'MA') & (df.state != 'PA'))]
 overall=overall.sort_values(by = 'year', ascending = True) 
 choro = px.choropleth(overall, locations='state',
-                    locationmode="USA-states", color='number', animation_frame="year", scope="usa", color_continuous_scale="oranges", title= 'Animated Choropleth Map')
+                    locationmode="USA-states", color='number', animation_frame="year", scope="usa", color_continuous_scale="oranges", title= 'Choropleth Map for all the states excluding the top four states (CA,NY,MA,PA)')
 
 ###
 #J#
