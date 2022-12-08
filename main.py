@@ -225,15 +225,15 @@ app.layout = html.Div([
     html.H1("Web Application Dashboard with Dash", style = {'text-align': 'center'}),
 
 
-    dcc.Dropdown(id = "state_ranking",
-                 options=[
-                     {"label": "Top 10 States", "value": "Top 10 States"},
-                     {"label": "Least 10 States", "value": "Least 10 States"},
-                     {"label": "Intermediate States", "value": "Intermediate States"}],
-                     multi = False,
-                     value = "Top 10 States",
-                     style ={'width':"40%"}
-                ),
+    # dcc.Dropdown(id = "state_ranking",
+    #              options=[
+    #                  {"label": "Top 10 States", "value": "Top 10 States"},
+    #                  {"label": "Least 10 States", "value": "Least 10 States"},
+    #                  {"label": "Intermediate States", "value": "Intermediate States"}],
+    #                  multi = False,
+    #                  value = "Top 10 States",
+    #                  style ={'width':"40%"}
+    #             ),
     html.Div(id = 'output_container', children = []),
     html.Br(),
 
