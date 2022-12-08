@@ -525,9 +525,6 @@ app.layout = html.Div([
 			id='sun_plot',
 			figure=sun  
 	),
-	html.Div(children='''
-        boxplot
-    '''),
 	html.Div(style={'height': '100px'}),
 	html.Div(children='''
 	 Are Homeless of certain states equally distributed?'''),
