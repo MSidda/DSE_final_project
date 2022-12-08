@@ -320,7 +320,7 @@ dcc.Graph(
         figure=stacked  
 ),
 dcc.Graph(
-        id='stacked_plot',
+        id='line2_plot',
         figure=line2  
 ),
 
