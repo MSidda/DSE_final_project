@@ -29,7 +29,7 @@ barchart =  px.bar(df2, x = 'year' , y = 'number' , title = 'Year wise count of 
 df3 = df[(df['state'] != 'Total')]
 df3 = df3.groupby(['state','year'])['number'].sum().reset_index()
 #df4 = df3.groupby('state')['number'].sum().reset_index()
-line_chart_1 = px.line(df3, x = 'year', y = 'number',color='state', markers=True, title= 'Year on Year Homeless Trend statewise') 
+line_chart_1 = px.line(df3, x = 'year', y = 'number',color='state', title= 'Year on Year Homeless Trend statewise') 
 
 corr_plot = px.imshow(df.corr(), zmin=-1, zmax=1, color_continuous_scale='rdbu', text_auto = 'True')
 df_1 = df[(df['homelessness'] == 'Chronically Homeless Individuals' ) & (df['state'] != 'Total')]
@@ -211,6 +211,14 @@ area_1=px.area(df_4, x="year", y="number", color="state", line_group="state")
 title='Chronical Homelessness trend spawning over years in southwest region of USA'
 area_1.update_layout(title_text='Chronical Homelessness trend spawning over years in southwest region of USA', title_x=0.5, title_font_color="blue",)
 #fig = px.bar(df, x="Fruit", y="Amount", color="City", barmode="group")
+vio=px.violin(df_4, x="state", y="number",title='Statistical attributes of Southwest region states ', color='state')
+df7 = df[df['state']!= 'Total']
+sun = px.sunburst(df7, path=['region', 'state'], values='number')
+
+df_2 = df[((df['homelessness'] == 'Chronically Homeless People in Families')|(df['homelessness'] =='Unsheltered Chronically Homeless' )|(df['homelessness'] =='Sheltered Total Chronically Homeless') | (df['homelessness'] == 'Chronically Homeless Individuals') )& (df['region'] != 'Total')]
+
+sun_1 = px.sunburst(df_2, values='number', path=['region','homelessness'], ids=None, color=None, color_continuous_scale=None, range_color=None, color_continuous_midpoint=None, color_discrete_sequence=None, color_discrete_map=None, hover_name=None, hover_data=None, custom_data=None, labels=None, title='Chronical data distribution data in various regions', template=None, width=None, height=1000, branchvalues=None, maxdepth=None)
+
 app = dash.Dash(__name__)
 server = app.server
 app.layout = html.Div([
@@ -320,6 +328,20 @@ dcc.Graph(
         id='stacked_plot',
         figure=area_1  
 ),
+
+dcc.Graph(
+        id='sun_plot',
+        figure=sun  
+),
+dcc.Graph(
+        id='vio_plot',
+        figure=vio  
+),
+dcc.Graph(
+        id='sun_plot1',
+        figure=sun_1 
+),
+
 ])
 
 if __name__ == '__main__':
